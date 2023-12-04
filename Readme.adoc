@@ -6,18 +6,19 @@ image:https://ci.spring.io/api/v1/teams/spring-boot/pipelines/spring-boot-3.2.x/
 
 == Introduction
 
- {project-name} Aims at providing the customer account infromation from blue harvest paortal , this API is used by the front end customer management portal.
+ {project-name} aims at providing the customer account infromation from blue harvest paortal , this API is used by the front end customer management portal.
 
 == Technical Stack
 
-  This API mainly uses spring boot Framework for the API creations, And Spring security backed Keycloak for the authentication and authrorization of the api based ont the roles and scopes subsribed for the user.
+   This API mainly uses spring boot Framework for the API creations,
+   Spring security backed Keycloak for the authentication and authrorization of the api based ont the roles and scopes subsribed for the user.
+    And it holds the data in H2 inmemory database.
 
 == Purpose and main rule
 
-  This service sotres and expposes the customer account information and managed the transactions related to the customer account.
+  This service sotres and exposes the customer account information and managed the transactions related to the customer account.
 
 == Global workflow and detailed Process
-
     The multi module proejct contains differnt client and API modues
 
 == Modules
@@ -28,16 +29,11 @@ image:https://ci.spring.io/api/v1/teams/spring-boot/pipelines/spring-boot-3.2.x/
    transaction-management-client
    transaction-management-api
 
-== Customer-information-api
+== customer-information-api
      This api holds the customer referential information and kyc details which providet the basic information about the customer and let's the customer to handle the transactions fromt the front end portal.
       This API exposes two main endpoints
       Post (Creation of User Account) :
       Get (Consult the account information and it's related transactions)
-        Application.
-        Its sole job is to create and refresh an appropriate Spring `ApplicationContext`.
-        * Embedded web applications with a choice of container (Tomcat, Jetty, or Undertow).
-        * First-class externalized configuration support.
-        * Convenience `ApplicationContext` initializers, including support for sensible logging defaults.
 
 
 == transactions-management-api
@@ -45,10 +41,6 @@ image:https://ci.spring.io/api/v1/teams/spring-boot/pipelines/spring-boot-3.2.x/
       This API exposes two main endpoints
       Post (Creation of new transaction) :
       Get (Consult the transactiosn involved in the account)
- This provides auto-configuration for actuator endpoints based on the content of the classpath and a set of properties.
-    For instance, if Micrometer is on the classpath, it will auto-configure the `MetricsEndpoint`.
-    It contains configuration to expose endpoints over HTTP or JMX.
-    Just like Spring Boot AutoConfigure, this will back away as the user starts to define their own beans.
 
 == Transaction management client
 

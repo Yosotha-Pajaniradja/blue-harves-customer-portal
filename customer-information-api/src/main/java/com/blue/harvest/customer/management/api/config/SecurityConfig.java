@@ -7,9 +7,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-
-import java.util.Collections;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -23,14 +20,16 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.cors().configurationSource(request -> {
-          CorsConfiguration config = new CorsConfiguration();
-          config.setAllowedHeaders(Collections.singletonList("*"));
-          config.setAllowedMethods(Collections.singletonList("*"));
-          config.addAllowedOrigin("*");
-          config.setAllowCredentials(true);
-          return config;
-        }).and().csrf().disable().authorizeHttpRequests()
+    http.
+        //            cors().configurationSource(request -> {
+        //          CorsConfiguration config = new CorsConfiguration();
+        //          config.setAllowedHeaders(Collections.singletonList("*"));
+        //          config.setAllowedMethods(Collections.singletonList("*"));
+        //          config.addAllowedOrigin("*");
+        //          config.setAllowCredentials(true);
+        //          return config;
+        //        }).and().
+            csrf().disable().authorizeHttpRequests()
         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/h2-console/**",
             "/api/v1/customers/*").permitAll().anyRequest().authenticated().and();
 

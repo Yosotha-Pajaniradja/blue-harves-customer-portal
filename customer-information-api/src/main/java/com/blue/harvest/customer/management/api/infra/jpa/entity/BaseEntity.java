@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class BaseEntity {
   @Id
-  @Column(name = "ID_CUSTOMER", nullable = false, updatable = false)
+  @Column(name = "IDENTIFIER", nullable = false, updatable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   protected Long id;
 

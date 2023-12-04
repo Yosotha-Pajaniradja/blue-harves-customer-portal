@@ -1,5 +1,6 @@
 package com.blue.harvest.customer.management.api.infra.resource.customer;
 
+import com.blue.harvest.customer.management.api.infra.dto.CustomerCreationDto;
 import com.blue.harvest.customer.management.api.infra.dto.CustomerDto;
 import com.blue.harvest.customer.management.api.infra.dto.CustomerResponseDto;
 import com.blue.harvest.customer.management.api.infra.utils.SecurityProblemResponsesConfiguration;
@@ -63,7 +64,7 @@ public class CustomerResource {
   @PreAuthorize(
       "hasAuthority('SCOPE_api.blue-harvest-customer-info.v1') or hasRole('role_consult_create')")
   public ResponseEntity<CustomerResponseDto> createNewAccountForCustomer(
-      @RequestBody CustomerDto customerDetails) {
+      @RequestBody CustomerCreationDto customerDetails) {
     try {
       CustomerResponseDto customerResponseDto =
           customerService.createCustomerAccount(customerDtoMapper.toDomain(customerDetails));

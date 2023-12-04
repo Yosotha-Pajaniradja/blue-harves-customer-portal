@@ -1,8 +1,9 @@
 package com.blue.harvest.customer.management.api.infra.jpa.mapper;
 
-import com.blue.harvest.customer.management.api.infra.jpa.entity.CustomerEntity;
+import com.blue.harvest.customer.management.api.domain.AccountsDomain;
 import com.blue.harvest.customer.management.api.domain.CustomerDomain;
 import com.blue.harvest.customer.management.api.infra.dto.TaxProfile;
+import com.blue.harvest.customer.management.api.infra.jpa.entity.CustomerEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,15 +21,21 @@ public class CustomerEntityMapper {
   }
 
   public List<CustomerDomain> toDomain(final List<CustomerEntity> customerEntity) {
-    customerEntity.stream().map(customerEntity1 -> {
-      return CustomerDomain.builder().withCountry(customerEntity1.getCountry())
-          .withFirstName(customerEntity1.getFirstName()).withIdCustomer(customerEntity1.getIdCustomer())
-          .withLastName(customerEntity1.getLastName())
-          .withTaxProfile(String.valueOf(TaxProfile.valueOf(customerEntity1.getTaxProfile())))
-          .withNoOfValidAccounts(customerEntity1.getNoOfValidAccount())
-          .withFirstName(customerEntity1.getFirstName()).build();
-    }).collect(Collectors.toList());
-    return null;
+    return customerEntity.stream().map(
+            customerEntity1 -> CustomerDomain.builder().withCountry(customerEntity1.getCountry())
+                .withFirstName(customerEntity1.getFirstName())
+                .withIdCustomer(customerEntity1.getIdCustomer())
+                .withLastName(customerEntity1.getLastName())
+                .withTaxProfile(String.valueOf(TaxProfile.valueOf(customerEntity1.getTaxProfile())))
+                .withNoOfValidAccounts(customerEntity1.getNoOfValidAccount()).withAccountsDomainList(
+                    customerEntity1.getAccountEntities().stream().map(
+                            customerAccountEntity -> AccountsDomain.builder()
+                                .withAccountNumber(customerAccountEntity.getAccountNumber())
+                                .withValidityDate(customerAccountEntity.getValidityDate())
+                                .withCreationDate(customerAccountEntity.getCreationDate()).build())
+                        .collect(Collectors.toList()))
+                .withOperatingCurrency(customerEntity1.getOperatingCurrency()).build())
+        .collect(Collectors.toList());
   }
 
   public CustomerEntity toEntity(final CustomerDomain customerDomain) {

@@ -1,6 +1,7 @@
 package com.blue.harvest.customer.management.api.infra;
 
 import com.blue.harvest.customer.management.api.domain.CustomerDomain;
+import com.blue.harvest.customer.management.api.infra.dto.AccountsDto;
 import com.blue.harvest.customer.management.api.infra.dto.CustomerDto;
 import com.blue.harvest.customer.management.api.infra.jpa.repository.CustomerDao;
 import com.blue.harvest.customer.management.api.infra.resource.customer.CustomerResource;
@@ -114,7 +115,7 @@ class IntegrationTestsCustomerResource {
 
   public static CustomerDto buildCustomerDetails() {
     return CustomerDto.builder().withCustomerIdentifier("35345455435435").withCurrency("EUR")
-        .withInitialCredit(BigDecimal.ONE).withIdentifier("Identifier").withFirstName("firstName")
+        .withListOfAccounts(List.of(AccountsDto.builder().build())).withIdentifier("Identifier").withFirstName("firstName")
         .withLastName("lastname").build();
   }
 

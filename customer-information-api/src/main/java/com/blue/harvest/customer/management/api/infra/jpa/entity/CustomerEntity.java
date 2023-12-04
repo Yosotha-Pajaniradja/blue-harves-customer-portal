@@ -2,6 +2,10 @@ package com.blue.harvest.customer.management.api.infra.jpa.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,6 +18,7 @@ import org.hibernate.Hibernate;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -48,11 +53,13 @@ public class CustomerEntity extends BaseEntity implements Serializable {
   @Setter(value = AccessLevel.PRIVATE)
   private String taxProfile;
 
-
   @Column(name = "OPERATING_CURRENCY")
   @Setter(value = AccessLevel.PRIVATE)
   private String operatingCurrency;
 
+  @OneToMany(targetEntity = CustomerAccountEntity.class, fetch = FetchType.EAGER)
+  @JoinColumn(referencedColumnName = "CUSTOMER_IDENTIFIER" , name = "CUSTOMER_IDENTIFIER", updatable = false)
+  private List<CustomerAccountEntity> accountEntities;
 
   @Builder(setterPrefix = "with", builderMethodName = "customerBuilder")
   private static CustomerEntity createCustomerEntity(@NonNull final String idCustomer,

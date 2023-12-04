@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 
@@ -15,7 +16,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class CustomerDomain implements Serializable{
+public class CustomerDomain implements Serializable {
 
   private String idCustomer;
 
@@ -32,6 +33,9 @@ public class CustomerDomain implements Serializable{
   private String OperatingCurrency;
 
   private Transaction transaction;
+
+  private List<AccountsDomain> accountsDomainList;
+
 
 
 }

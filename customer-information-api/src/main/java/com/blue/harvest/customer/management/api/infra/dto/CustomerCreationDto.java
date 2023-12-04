@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -18,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(name = "Instruction", description = "Rerpresents the customer referential info")
-public class CustomerDto implements Serializable {
+public class CustomerCreationDto implements Serializable {
 
   @Hidden private String Identifier;
 
@@ -40,10 +39,5 @@ public class CustomerDto implements Serializable {
   @Schema(description = "Currency of transactions")
   @Size(max = 3)
   private String Currency;
-
-  @Schema(description = "List of accounts")
-  private List<AccountsDto> listOfAccounts;
-
-
 
 }

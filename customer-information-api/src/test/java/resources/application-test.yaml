@@ -1,0 +1,19 @@
+security:
+  oauth2:
+    resource-server:
+      jwt:
+        issuer-uri: http://mockurl/realms/blue-harvest-oauth2
+        jwk-set-uri: ${spring.security.oauth2.resource-server.jwt.issuer-uri}/protocol/openid-connect/certs
+    client:
+      registration:
+        transaction-api-security-config:
+          provider: keycloak
+          authorization-grant-type: client_credentials
+          client-secret: 1234
+          client-id: user_consult
+          scope: scopes
+      provider:
+        keycloak:
+          token-uri: http://mockurl/realms/blue-harvest-oauth2/protocol/openid-connect/token
+          authorization-uri: http://mockurl/realms/blue-harvest-oauth2/protocol/openid-connect/auth
+

@@ -1,0 +1,53 @@
+server:
+  port: 8089
+keycloak.enabled: true
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    name: transaction_info
+    username: sa
+    password:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_ON_EXIT=FALSE
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none
+
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/blue-harvest-oauth2
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+      client:
+        registration:
+          transaction-api-security-config:
+            provider: keycloak
+            authorization-grant-type: client_credentials
+            client-secret: ${CLIENT_SECRET}
+            client-id: user_consult
+            scope: infra.blue-harvest-transaction-info.v1, infra.blue-harvest-transaction-info-consult.v1, infra.blue-harvest-transaction-info-create.v1
+        provider:
+          keycloak:
+            token-uri: http://localhost:8080/realms/blue-harvest-oauth2/protocol/openid-connect/token
+            authorization-uri: http://localhost:8080/realms/blue-harvest-oauth2/protocol/openid-connect/auth
+jwt:
+  auth:
+    converter:
+      resource-id: user-account-holder
+      principle-attribute: user_consult
+
+springdoc:
+  auto-tag-classes: on
+  enable-spring-security: true
+  swagger-ui:
+    oauth:
+      client-id: user_consult
+      client-secret: 1234
+      realm: blue-harvest-oauth2
+      scopes: infra.blue-harvest-customer-info.v1
+    groups-order: DESC
+    urls-primary-name: v1
+
+openapi.dev-url: http://localhost:8089
+

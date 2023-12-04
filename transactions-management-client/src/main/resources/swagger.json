@@ -1,0 +1,1306 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API to manage transactions",
+    "description": "This API expose transaction management endpoints.",
+    "termsOfService": "https://blueharvest.com/licenses/",
+    "contact": {
+      "name": "UserBlueHarvest",
+      "email": "userQuery@blueharvest.com"
+    },
+    "license": {
+      "name": "blueHarvest License",
+      "url": "https://blueharvest.com/licenses/"
+    },
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8086",
+      "description": "Server URL in Development environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Transaction Management Resource",
+      "description": "Transaction Management API"
+    }
+  ],
+  "paths": {
+    "/api/v1/transactions/createNewTransaction": {
+      "post": {
+        "tags": [
+          "Transaction Management Resource"
+        ],
+        "summary": "Create a new transaction",
+        "operationId": "createNewTransaction",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Transaction"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionCreationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/http401"
+          },
+          "403": {
+            "$ref": "#/components/responses/http403"
+          },
+          "500": {
+            "$ref": "#/components/responses/http500"
+          }
+        }
+      }
+    },
+    "/api/v1/transactions/get": {
+      "get": {
+        "tags": [
+          "Transaction Management Resource"
+        ],
+        "summary": "Retrieve a all Transaction",
+        "description": "Get a Transaction Data object by specifying its id. The response is Transaction Data object with id, title, description and published status.",
+        "operationId": "getAllTransactions",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/http401"
+          },
+          "403": {
+            "$ref": "#/components/responses/http403"
+          },
+          "500": {
+            "$ref": "#/components/responses/http500"
+          }
+        }
+      }
+    },
+    "/api/v1/transactions/get/{customerIdentifier}": {
+      "get": {
+        "tags": [
+          "Transaction Management Resource"
+        ],
+        "summary": "Retrieve all Transaction information of the user",
+        "operationId": "getAllTransactionDetails",
+        "parameters": [
+          {
+            "name": "customerIdentifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/http401"
+          },
+          "403": {
+            "$ref": "#/components/responses/http403"
+          },
+          "500": {
+            "$ref": "#/components/responses/http500"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Transaction": {
+        "required": [
+          "accountNumberSource",
+          "accountNumberTarget",
+          "customerAccountIdentifier"
+        ],
+        "type": "object",
+        "properties": {
+          "accountNumberSource": {
+            "maxLength": 50,
+            "minLength": 10,
+            "type": "string",
+            "description": "First Name of the Transaction"
+          },
+          "accountNumberTarget": {
+            "maxLength": 50,
+            "minLength": 10,
+            "type": "string",
+            "description": "First Name of the Transaction"
+          },
+          "customerAccountIdentifier": {
+            "maxLength": 50,
+            "minLength": 10,
+            "type": "string",
+            "description": "First Name of the Transaction"
+          },
+          "initialCredit": {
+            "multipleOf": 1e-13,
+            "type": "number",
+            "description": "Total no of valid transaction that the transaction is bearing",
+            "format": "decimal",
+            "example": 344.232
+          }
+        },
+        "description": "Represents the new Transaction creation"
+      },
+      "TransactionCreationResponse": {
+        "type": "object",
+        "properties": {
+          "transactionInfos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransactionInfo"
+            }
+          },
+          "countOfSuccess": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "description": "Represents the transaction referential info"
+      },
+      "TransactionInfo": {
+        "required": [
+          "accountNumberSource",
+          "accountNumberTarget",
+          "customerAccountIdentifier",
+          "initialCredit",
+          "transactionCreationDate"
+        ],
+        "type": "object",
+        "properties": {
+          "accountNumberSource": {
+            "maxLength": 50,
+            "minLength": 10,
+            "type": "string",
+            "description": "First Name of the Transaction"
+          },
+          "accountNumberTarget": {
+            "maxLength": 50,
+            "minLength": 10,
+            "type": "string",
+            "description": "First Name of the Transaction"
+          },
+          "initialCredit": {
+            "multipleOf": 1e-13,
+            "type": "number",
+            "description": "Total no of valid transaction that the transaction is bearing",
+            "format": "decimal",
+            "example": 344.232
+          },
+          "customerAccountIdentifier": {
+            "maxLength": 50,
+            "minLength": 10,
+            "type": "string",
+            "description": "Customer account Identifier"
+          },
+          "transactionCreationDate": {
+            "type": "string",
+            "description": "Transaction creation date",
+            "format": "date",
+            "example": "2023-12-22"
+          }
+        },
+        "description": "Represents the transaction referential info"
+      },
+      "TransactionResponse": {
+        "type": "object",
+        "properties": {
+          "transactionInfos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransactionInfo"
+            }
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "description": "Represents the transaction referential info"
+      },
+      "Problem": {
+        "type": "object",
+        "properties": {
+          "instance": {
+            "type": "string",
+            "format": "uri"
+          },
+          "type": {
+            "type": "string",
+            "format": "uri"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          }
+        },
+        "description": "RFC 7807 problem detail , Additional properties may exist"
+      },
+      "ConstraintViolationProblem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "format": "uri"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "violations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Violation"
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "string",
+            "format": "uri"
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      },
+      "Violation": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    },
+    "responses": {
+      "http403": {
+        "description": "Forbidden",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        }
+      },
+      "http500": {
+        "description": "Internal server error",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            },
+            "example": {
+              "stackTrace": [
+                {
+                  "classLoaderName": "app",
+                  "methodName": "build",
+                  "fileName": "ProblemBuilder.java",
+                  "lineNumber": 83,
+                  "nativeMethod": false,
+                  "className": "org.zalando.problem.ProblemBuilder"
+                },
+                {
+                  "methodName": "<clinit>",
+                  "fileName": "SecurityProblemResponsesConfiguration.java",
+                  "lineNumber": 58,
+                  "nativeMethod": false,
+                  "className": "com.blue.harvest.transactions.management.api.infra.utils.SecurityProblemResponsesConfiguration"
+                },
+                {
+                  "moduleName": "java.base",
+                  "moduleVersion": "17.0.7",
+                  "methodName": "forName0",
+                  "fileName": "Class.java",
+                  "lineNumber": -2,
+                  "nativeMethod": true,
+                  "className": "java.lang.Class"
+                },
+                {
+                  "moduleName": "java.base",
+                  "moduleVersion": "17.0.7",
+                  "methodName": "forName",
+                  "fileName": "Class.java",
+                  "lineNumber": 467,
+                  "nativeMethod": false,
+                  "className": "java.lang.Class"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "defineClass",
+                  "fileName": "ReflectUtils.java",
+                  "lineNumber": 549,
+                  "nativeMethod": false,
+                  "className": "org.springframework.cglib.core.ReflectUtils"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "generate",
+                  "fileName": "AbstractClassGenerator.java",
+                  "lineNumber": 367,
+                  "nativeMethod": false,
+                  "className": "org.springframework.cglib.core.AbstractClassGenerator"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "generate",
+                  "fileName": "Enhancer.java",
+                  "lineNumber": 575,
+                  "nativeMethod": false,
+                  "className": "org.springframework.cglib.proxy.Enhancer"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "lambda$new$1",
+                  "fileName": "AbstractClassGenerator.java",
+                  "lineNumber": 103,
+                  "nativeMethod": false,
+                  "className": "org.springframework.cglib.core.AbstractClassGenerator$ClassLoaderData"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "lambda$createEntry$1",
+                  "fileName": "LoadingCache.java",
+                  "lineNumber": 52,
+                  "nativeMethod": false,
+                  "className": "org.springframework.cglib.core.internal.LoadingCache"
+                },
+                {
+                  "moduleName": "java.base",
+                  "moduleVersion": "17.0.7",
+                  "methodName": "run$$$capture",
+                  "fileName": "FutureTask.java",
+                  "lineNumber": 264,
+                  "nativeMethod": false,
+                  "className": "java.util.concurrent.FutureTask"
+                },
+                {
+                  "moduleName": "java.base",
+                  "moduleVersion": "17.0.7",
+                  "methodName": "run",
+                  "fileName": "FutureTask.java",
+                  "lineNumber": -1,
+                  "nativeMethod": false,
+                  "className": "java.util.concurrent.FutureTask"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "createEntry",
+                  "fileName": "LoadingCache.java",
+                  "lineNumber": 57,
+                  "nativeMethod": false,
+                  "className": "org.springframework.cglib.core.internal.LoadingCache"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "get",
+                  "fileName": "LoadingCache.java",
+                  "lineNumber": 34,
+                  "nativeMethod": false,
+                  "className": "org.springframework.cglib.core.internal.LoadingCache"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "get",
+                  "fileName": "AbstractClassGenerator.java",
+                  "lineNumber": 126,
+                  "nativeMethod": false,
+                  "className": "org.springframework.cglib.core.AbstractClassGenerator$ClassLoaderData"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "create",
+                  "fileName": "AbstractClassGenerator.java",
+                  "lineNumber": 313,
+                  "nativeMethod": false,
+                  "className": "org.springframework.cglib.core.AbstractClassGenerator"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "createHelper",
+                  "fileName": "Enhancer.java",
+                  "lineNumber": 562,
+                  "nativeMethod": false,
+                  "className": "org.springframework.cglib.proxy.Enhancer"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "createClass",
+                  "fileName": "Enhancer.java",
+                  "lineNumber": 407,
+                  "nativeMethod": false,
+                  "className": "org.springframework.cglib.proxy.Enhancer"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "createClass",
+                  "fileName": "ConfigurationClassEnhancer.java",
+                  "lineNumber": 138,
+                  "nativeMethod": false,
+                  "className": "org.springframework.context.annotation.ConfigurationClassEnhancer"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "enhance",
+                  "fileName": "ConfigurationClassEnhancer.java",
+                  "lineNumber": 109,
+                  "nativeMethod": false,
+                  "className": "org.springframework.context.annotation.ConfigurationClassEnhancer"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "enhanceConfigurationClasses",
+                  "fileName": "ConfigurationClassPostProcessor.java",
+                  "lineNumber": 514,
+                  "nativeMethod": false,
+                  "className": "org.springframework.context.annotation.ConfigurationClassPostProcessor"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "postProcessBeanFactory",
+                  "fileName": "ConfigurationClassPostProcessor.java",
+                  "lineNumber": 304,
+                  "nativeMethod": false,
+                  "className": "org.springframework.context.annotation.ConfigurationClassPostProcessor"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "invokeBeanFactoryPostProcessors",
+                  "fileName": "PostProcessorRegistrationDelegate.java",
+                  "lineNumber": 358,
+                  "nativeMethod": false,
+                  "className": "org.springframework.context.support.PostProcessorRegistrationDelegate"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "invokeBeanFactoryPostProcessors",
+                  "fileName": "PostProcessorRegistrationDelegate.java",
+                  "lineNumber": 150,
+                  "nativeMethod": false,
+                  "className": "org.springframework.context.support.PostProcessorRegistrationDelegate"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "invokeBeanFactoryPostProcessors",
+                  "fileName": "AbstractApplicationContext.java",
+                  "lineNumber": 747,
+                  "nativeMethod": false,
+                  "className": "org.springframework.context.support.AbstractApplicationContext"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "refresh",
+                  "fileName": "AbstractApplicationContext.java",
+                  "lineNumber": 565,
+                  "nativeMethod": false,
+                  "className": "org.springframework.context.support.AbstractApplicationContext"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "refresh",
+                  "fileName": "ServletWebServerApplicationContext.java",
+                  "lineNumber": 146,
+                  "nativeMethod": false,
+                  "className": "org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "refresh",
+                  "fileName": "SpringApplication.java",
+                  "lineNumber": 732,
+                  "nativeMethod": false,
+                  "className": "org.springframework.boot.SpringApplication"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "refreshContext",
+                  "fileName": "SpringApplication.java",
+                  "lineNumber": 434,
+                  "nativeMethod": false,
+                  "className": "org.springframework.boot.SpringApplication"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "run",
+                  "fileName": "SpringApplication.java",
+                  "lineNumber": 310,
+                  "nativeMethod": false,
+                  "className": "org.springframework.boot.SpringApplication"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "run",
+                  "fileName": "SpringApplication.java",
+                  "lineNumber": 1304,
+                  "nativeMethod": false,
+                  "className": "org.springframework.boot.SpringApplication"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "run",
+                  "fileName": "SpringApplication.java",
+                  "lineNumber": 1293,
+                  "nativeMethod": false,
+                  "className": "org.springframework.boot.SpringApplication"
+                },
+                {
+                  "methodName": "main",
+                  "fileName": "SpringBootTransactionApplication.java",
+                  "lineNumber": 10,
+                  "nativeMethod": false,
+                  "className": "com.blue.harvest.transactions.management.api.SpringBootTransactionApplication"
+                },
+                {
+                  "moduleName": "java.base",
+                  "moduleVersion": "17.0.7",
+                  "methodName": "invoke0",
+                  "fileName": "NativeMethodAccessorImpl.java",
+                  "lineNumber": -2,
+                  "nativeMethod": true,
+                  "className": "jdk.internal.reflect.NativeMethodAccessorImpl"
+                },
+                {
+                  "moduleName": "java.base",
+                  "moduleVersion": "17.0.7",
+                  "methodName": "invoke",
+                  "fileName": "NativeMethodAccessorImpl.java",
+                  "lineNumber": 77,
+                  "nativeMethod": false,
+                  "className": "jdk.internal.reflect.NativeMethodAccessorImpl"
+                },
+                {
+                  "moduleName": "java.base",
+                  "moduleVersion": "17.0.7",
+                  "methodName": "invoke",
+                  "fileName": "DelegatingMethodAccessorImpl.java",
+                  "lineNumber": 43,
+                  "nativeMethod": false,
+                  "className": "jdk.internal.reflect.DelegatingMethodAccessorImpl"
+                },
+                {
+                  "moduleName": "java.base",
+                  "moduleVersion": "17.0.7",
+                  "methodName": "invoke",
+                  "fileName": "Method.java",
+                  "lineNumber": 568,
+                  "nativeMethod": false,
+                  "className": "java.lang.reflect.Method"
+                },
+                {
+                  "classLoaderName": "app",
+                  "methodName": "run",
+                  "fileName": "RestartLauncher.java",
+                  "lineNumber": 49,
+                  "nativeMethod": false,
+                  "className": "org.springframework.boot.devtools.restart.RestartLauncher"
+                }
+              ],
+              "type": "about:blank",
+              "title": "Internal Server Error",
+              "status": "500 Internal Server Error",
+              "detail": "Full authentication is required to access this resource",
+              "parameters": {},
+              "message": "Internal Server Error: Full authentication is required to access this resource",
+              "suppressed": [],
+              "localizedMessage": "Internal Server Error: Full authentication is required to access this resource"
+            }
+          }
+        }
+      },
+      "http401": {
+        "description": "Invalid Authentication.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            },
+            "example": {
+              "no_token": {
+                "summary": "no_token",
+                "description": "Authenticaion token not provide",
+                "value": {
+                  "stackTrace": [
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "build",
+                      "fileName": "ProblemBuilder.java",
+                      "lineNumber": 83,
+                      "nativeMethod": false,
+                      "className": "org.zalando.problem.ProblemBuilder"
+                    },
+                    {
+                      "methodName": "<clinit>",
+                      "fileName": "SecurityProblemResponsesConfiguration.java",
+                      "lineNumber": 51,
+                      "nativeMethod": false,
+                      "className": "com.blue.harvest.transactions.management.api.infra.utils.SecurityProblemResponsesConfiguration"
+                    },
+                    {
+                      "moduleName": "java.base",
+                      "moduleVersion": "17.0.7",
+                      "methodName": "forName0",
+                      "fileName": "Class.java",
+                      "lineNumber": -2,
+                      "nativeMethod": true,
+                      "className": "java.lang.Class"
+                    },
+                    {
+                      "moduleName": "java.base",
+                      "moduleVersion": "17.0.7",
+                      "methodName": "forName",
+                      "fileName": "Class.java",
+                      "lineNumber": 467,
+                      "nativeMethod": false,
+                      "className": "java.lang.Class"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "defineClass",
+                      "fileName": "ReflectUtils.java",
+                      "lineNumber": 549,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.core.ReflectUtils"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "generate",
+                      "fileName": "AbstractClassGenerator.java",
+                      "lineNumber": 367,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.core.AbstractClassGenerator"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "generate",
+                      "fileName": "Enhancer.java",
+                      "lineNumber": 575,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.proxy.Enhancer"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "lambda$new$1",
+                      "fileName": "AbstractClassGenerator.java",
+                      "lineNumber": 103,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.core.AbstractClassGenerator$ClassLoaderData"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "lambda$createEntry$1",
+                      "fileName": "LoadingCache.java",
+                      "lineNumber": 52,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.core.internal.LoadingCache"
+                    },
+                    {
+                      "moduleName": "java.base",
+                      "moduleVersion": "17.0.7",
+                      "methodName": "run$$$capture",
+                      "fileName": "FutureTask.java",
+                      "lineNumber": 264,
+                      "nativeMethod": false,
+                      "className": "java.util.concurrent.FutureTask"
+                    },
+                    {
+                      "moduleName": "java.base",
+                      "moduleVersion": "17.0.7",
+                      "methodName": "run",
+                      "fileName": "FutureTask.java",
+                      "lineNumber": -1,
+                      "nativeMethod": false,
+                      "className": "java.util.concurrent.FutureTask"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "createEntry",
+                      "fileName": "LoadingCache.java",
+                      "lineNumber": 57,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.core.internal.LoadingCache"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "get",
+                      "fileName": "LoadingCache.java",
+                      "lineNumber": 34,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.core.internal.LoadingCache"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "get",
+                      "fileName": "AbstractClassGenerator.java",
+                      "lineNumber": 126,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.core.AbstractClassGenerator$ClassLoaderData"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "create",
+                      "fileName": "AbstractClassGenerator.java",
+                      "lineNumber": 313,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.core.AbstractClassGenerator"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "createHelper",
+                      "fileName": "Enhancer.java",
+                      "lineNumber": 562,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.proxy.Enhancer"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "createClass",
+                      "fileName": "Enhancer.java",
+                      "lineNumber": 407,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.proxy.Enhancer"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "createClass",
+                      "fileName": "ConfigurationClassEnhancer.java",
+                      "lineNumber": 138,
+                      "nativeMethod": false,
+                      "className": "org.springframework.context.annotation.ConfigurationClassEnhancer"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "enhance",
+                      "fileName": "ConfigurationClassEnhancer.java",
+                      "lineNumber": 109,
+                      "nativeMethod": false,
+                      "className": "org.springframework.context.annotation.ConfigurationClassEnhancer"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "enhanceConfigurationClasses",
+                      "fileName": "ConfigurationClassPostProcessor.java",
+                      "lineNumber": 514,
+                      "nativeMethod": false,
+                      "className": "org.springframework.context.annotation.ConfigurationClassPostProcessor"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "postProcessBeanFactory",
+                      "fileName": "ConfigurationClassPostProcessor.java",
+                      "lineNumber": 304,
+                      "nativeMethod": false,
+                      "className": "org.springframework.context.annotation.ConfigurationClassPostProcessor"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "invokeBeanFactoryPostProcessors",
+                      "fileName": "PostProcessorRegistrationDelegate.java",
+                      "lineNumber": 358,
+                      "nativeMethod": false,
+                      "className": "org.springframework.context.support.PostProcessorRegistrationDelegate"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "invokeBeanFactoryPostProcessors",
+                      "fileName": "PostProcessorRegistrationDelegate.java",
+                      "lineNumber": 150,
+                      "nativeMethod": false,
+                      "className": "org.springframework.context.support.PostProcessorRegistrationDelegate"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "invokeBeanFactoryPostProcessors",
+                      "fileName": "AbstractApplicationContext.java",
+                      "lineNumber": 747,
+                      "nativeMethod": false,
+                      "className": "org.springframework.context.support.AbstractApplicationContext"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "refresh",
+                      "fileName": "AbstractApplicationContext.java",
+                      "lineNumber": 565,
+                      "nativeMethod": false,
+                      "className": "org.springframework.context.support.AbstractApplicationContext"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "refresh",
+                      "fileName": "ServletWebServerApplicationContext.java",
+                      "lineNumber": 146,
+                      "nativeMethod": false,
+                      "className": "org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "refresh",
+                      "fileName": "SpringApplication.java",
+                      "lineNumber": 732,
+                      "nativeMethod": false,
+                      "className": "org.springframework.boot.SpringApplication"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "refreshContext",
+                      "fileName": "SpringApplication.java",
+                      "lineNumber": 434,
+                      "nativeMethod": false,
+                      "className": "org.springframework.boot.SpringApplication"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "run",
+                      "fileName": "SpringApplication.java",
+                      "lineNumber": 310,
+                      "nativeMethod": false,
+                      "className": "org.springframework.boot.SpringApplication"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "run",
+                      "fileName": "SpringApplication.java",
+                      "lineNumber": 1304,
+                      "nativeMethod": false,
+                      "className": "org.springframework.boot.SpringApplication"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "run",
+                      "fileName": "SpringApplication.java",
+                      "lineNumber": 1293,
+                      "nativeMethod": false,
+                      "className": "org.springframework.boot.SpringApplication"
+                    },
+                    {
+                      "methodName": "main",
+                      "fileName": "SpringBootTransactionApplication.java",
+                      "lineNumber": 10,
+                      "nativeMethod": false,
+                      "className": "com.blue.harvest.transactions.management.api.SpringBootTransactionApplication"
+                    },
+                    {
+                      "moduleName": "java.base",
+                      "moduleVersion": "17.0.7",
+                      "methodName": "invoke0",
+                      "fileName": "NativeMethodAccessorImpl.java",
+                      "lineNumber": -2,
+                      "nativeMethod": true,
+                      "className": "jdk.internal.reflect.NativeMethodAccessorImpl"
+                    },
+                    {
+                      "moduleName": "java.base",
+                      "moduleVersion": "17.0.7",
+                      "methodName": "invoke",
+                      "fileName": "NativeMethodAccessorImpl.java",
+                      "lineNumber": 77,
+                      "nativeMethod": false,
+                      "className": "jdk.internal.reflect.NativeMethodAccessorImpl"
+                    },
+                    {
+                      "moduleName": "java.base",
+                      "moduleVersion": "17.0.7",
+                      "methodName": "invoke",
+                      "fileName": "DelegatingMethodAccessorImpl.java",
+                      "lineNumber": 43,
+                      "nativeMethod": false,
+                      "className": "jdk.internal.reflect.DelegatingMethodAccessorImpl"
+                    },
+                    {
+                      "moduleName": "java.base",
+                      "moduleVersion": "17.0.7",
+                      "methodName": "invoke",
+                      "fileName": "Method.java",
+                      "lineNumber": 568,
+                      "nativeMethod": false,
+                      "className": "java.lang.reflect.Method"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "run",
+                      "fileName": "RestartLauncher.java",
+                      "lineNumber": 49,
+                      "nativeMethod": false,
+                      "className": "org.springframework.boot.devtools.restart.RestartLauncher"
+                    }
+                  ],
+                  "type": "about:blank",
+                  "title": "Unauthorized",
+                  "status": "401 Unauthorized",
+                  "detail": "Full authentication is required to access this reosurce",
+                  "parameters": {},
+                  "message": "Unauthorized: Full authentication is required to access this reosurce",
+                  "suppressed": [],
+                  "localizedMessage": "Unauthorized: Full authentication is required to access this reosurce"
+                }
+              },
+              "bad_token": {
+                "summary": "bad_token",
+                "description": "Authenticaion token not provide",
+                "value": {
+                  "stackTrace": [
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "build",
+                      "fileName": "ProblemBuilder.java",
+                      "lineNumber": 83,
+                      "nativeMethod": false,
+                      "className": "org.zalando.problem.ProblemBuilder"
+                    },
+                    {
+                      "methodName": "<clinit>",
+                      "fileName": "SecurityProblemResponsesConfiguration.java",
+                      "lineNumber": 54,
+                      "nativeMethod": false,
+                      "className": "com.blue.harvest.transactions.management.api.infra.utils.SecurityProblemResponsesConfiguration"
+                    },
+                    {
+                      "moduleName": "java.base",
+                      "moduleVersion": "17.0.7",
+                      "methodName": "forName0",
+                      "fileName": "Class.java",
+                      "lineNumber": -2,
+                      "nativeMethod": true,
+                      "className": "java.lang.Class"
+                    },
+                    {
+                      "moduleName": "java.base",
+                      "moduleVersion": "17.0.7",
+                      "methodName": "forName",
+                      "fileName": "Class.java",
+                      "lineNumber": 467,
+                      "nativeMethod": false,
+                      "className": "java.lang.Class"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "defineClass",
+                      "fileName": "ReflectUtils.java",
+                      "lineNumber": 549,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.core.ReflectUtils"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "generate",
+                      "fileName": "AbstractClassGenerator.java",
+                      "lineNumber": 367,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.core.AbstractClassGenerator"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "generate",
+                      "fileName": "Enhancer.java",
+                      "lineNumber": 575,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.proxy.Enhancer"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "lambda$new$1",
+                      "fileName": "AbstractClassGenerator.java",
+                      "lineNumber": 103,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.core.AbstractClassGenerator$ClassLoaderData"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "lambda$createEntry$1",
+                      "fileName": "LoadingCache.java",
+                      "lineNumber": 52,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.core.internal.LoadingCache"
+                    },
+                    {
+                      "moduleName": "java.base",
+                      "moduleVersion": "17.0.7",
+                      "methodName": "run$$$capture",
+                      "fileName": "FutureTask.java",
+                      "lineNumber": 264,
+                      "nativeMethod": false,
+                      "className": "java.util.concurrent.FutureTask"
+                    },
+                    {
+                      "moduleName": "java.base",
+                      "moduleVersion": "17.0.7",
+                      "methodName": "run",
+                      "fileName": "FutureTask.java",
+                      "lineNumber": -1,
+                      "nativeMethod": false,
+                      "className": "java.util.concurrent.FutureTask"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "createEntry",
+                      "fileName": "LoadingCache.java",
+                      "lineNumber": 57,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.core.internal.LoadingCache"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "get",
+                      "fileName": "LoadingCache.java",
+                      "lineNumber": 34,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.core.internal.LoadingCache"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "get",
+                      "fileName": "AbstractClassGenerator.java",
+                      "lineNumber": 126,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.core.AbstractClassGenerator$ClassLoaderData"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "create",
+                      "fileName": "AbstractClassGenerator.java",
+                      "lineNumber": 313,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.core.AbstractClassGenerator"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "createHelper",
+                      "fileName": "Enhancer.java",
+                      "lineNumber": 562,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.proxy.Enhancer"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "createClass",
+                      "fileName": "Enhancer.java",
+                      "lineNumber": 407,
+                      "nativeMethod": false,
+                      "className": "org.springframework.cglib.proxy.Enhancer"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "createClass",
+                      "fileName": "ConfigurationClassEnhancer.java",
+                      "lineNumber": 138,
+                      "nativeMethod": false,
+                      "className": "org.springframework.context.annotation.ConfigurationClassEnhancer"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "enhance",
+                      "fileName": "ConfigurationClassEnhancer.java",
+                      "lineNumber": 109,
+                      "nativeMethod": false,
+                      "className": "org.springframework.context.annotation.ConfigurationClassEnhancer"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "enhanceConfigurationClasses",
+                      "fileName": "ConfigurationClassPostProcessor.java",
+                      "lineNumber": 514,
+                      "nativeMethod": false,
+                      "className": "org.springframework.context.annotation.ConfigurationClassPostProcessor"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "postProcessBeanFactory",
+                      "fileName": "ConfigurationClassPostProcessor.java",
+                      "lineNumber": 304,
+                      "nativeMethod": false,
+                      "className": "org.springframework.context.annotation.ConfigurationClassPostProcessor"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "invokeBeanFactoryPostProcessors",
+                      "fileName": "PostProcessorRegistrationDelegate.java",
+                      "lineNumber": 358,
+                      "nativeMethod": false,
+                      "className": "org.springframework.context.support.PostProcessorRegistrationDelegate"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "invokeBeanFactoryPostProcessors",
+                      "fileName": "PostProcessorRegistrationDelegate.java",
+                      "lineNumber": 150,
+                      "nativeMethod": false,
+                      "className": "org.springframework.context.support.PostProcessorRegistrationDelegate"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "invokeBeanFactoryPostProcessors",
+                      "fileName": "AbstractApplicationContext.java",
+                      "lineNumber": 747,
+                      "nativeMethod": false,
+                      "className": "org.springframework.context.support.AbstractApplicationContext"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "refresh",
+                      "fileName": "AbstractApplicationContext.java",
+                      "lineNumber": 565,
+                      "nativeMethod": false,
+                      "className": "org.springframework.context.support.AbstractApplicationContext"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "refresh",
+                      "fileName": "ServletWebServerApplicationContext.java",
+                      "lineNumber": 146,
+                      "nativeMethod": false,
+                      "className": "org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "refresh",
+                      "fileName": "SpringApplication.java",
+                      "lineNumber": 732,
+                      "nativeMethod": false,
+                      "className": "org.springframework.boot.SpringApplication"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "refreshContext",
+                      "fileName": "SpringApplication.java",
+                      "lineNumber": 434,
+                      "nativeMethod": false,
+                      "className": "org.springframework.boot.SpringApplication"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "run",
+                      "fileName": "SpringApplication.java",
+                      "lineNumber": 310,
+                      "nativeMethod": false,
+                      "className": "org.springframework.boot.SpringApplication"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "run",
+                      "fileName": "SpringApplication.java",
+                      "lineNumber": 1304,
+                      "nativeMethod": false,
+                      "className": "org.springframework.boot.SpringApplication"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "run",
+                      "fileName": "SpringApplication.java",
+                      "lineNumber": 1293,
+                      "nativeMethod": false,
+                      "className": "org.springframework.boot.SpringApplication"
+                    },
+                    {
+                      "methodName": "main",
+                      "fileName": "SpringBootTransactionApplication.java",
+                      "lineNumber": 10,
+                      "nativeMethod": false,
+                      "className": "com.blue.harvest.transactions.management.api.SpringBootTransactionApplication"
+                    },
+                    {
+                      "moduleName": "java.base",
+                      "moduleVersion": "17.0.7",
+                      "methodName": "invoke0",
+                      "fileName": "NativeMethodAccessorImpl.java",
+                      "lineNumber": -2,
+                      "nativeMethod": true,
+                      "className": "jdk.internal.reflect.NativeMethodAccessorImpl"
+                    },
+                    {
+                      "moduleName": "java.base",
+                      "moduleVersion": "17.0.7",
+                      "methodName": "invoke",
+                      "fileName": "NativeMethodAccessorImpl.java",
+                      "lineNumber": 77,
+                      "nativeMethod": false,
+                      "className": "jdk.internal.reflect.NativeMethodAccessorImpl"
+                    },
+                    {
+                      "moduleName": "java.base",
+                      "moduleVersion": "17.0.7",
+                      "methodName": "invoke",
+                      "fileName": "DelegatingMethodAccessorImpl.java",
+                      "lineNumber": 43,
+                      "nativeMethod": false,
+                      "className": "jdk.internal.reflect.DelegatingMethodAccessorImpl"
+                    },
+                    {
+                      "moduleName": "java.base",
+                      "moduleVersion": "17.0.7",
+                      "methodName": "invoke",
+                      "fileName": "Method.java",
+                      "lineNumber": 568,
+                      "nativeMethod": false,
+                      "className": "java.lang.reflect.Method"
+                    },
+                    {
+                      "classLoaderName": "app",
+                      "methodName": "run",
+                      "fileName": "RestartLauncher.java",
+                      "lineNumber": 49,
+                      "nativeMethod": false,
+                      "className": "org.springframework.boot.devtools.restart.RestartLauncher"
+                    }
+                  ],
+                  "type": "about:blank",
+                  "title": "Forbidden",
+                  "status": "403 Forbidden",
+                  "detail": "Full authentication is required to access this reosurce",
+                  "parameters": {},
+                  "message": "Forbidden: Full authentication is required to access this reosurce",
+                  "suppressed": [],
+                  "localizedMessage": "Forbidden: Full authentication is required to access this reosurce"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -4,7 +4,7 @@ import com.blue.harvest.customer.management.api.domain.CustomerDomain;
 import com.blue.harvest.customer.management.api.infra.dto.AccountsDto;
 import com.blue.harvest.customer.management.api.infra.dto.CustomerDto;
 import com.blue.harvest.customer.management.api.infra.jpa.repository.CustomerDao;
-import com.blue.harvest.customer.management.api.infra.resource.customer.CustomerResource;
+import com.blue.harvest.customer.management.api.infra.resource.CustomerResource;
 import com.blue.harvest.customer.management.api.mapper.CustomerDtoMapper;
 import com.blue.harvest.customer.management.api.service.CustomerService;
 import com.blue.harvest.customer.management.api.service.CustomerTransactionService;

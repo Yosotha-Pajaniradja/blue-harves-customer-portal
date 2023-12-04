@@ -84,8 +84,8 @@ public class CustomerService {
     return transaction;
   }
 
-  public CustomerDto findByCustomerIdentifier(long id) {
-    return CustomerDto.builder().build();
+  public CustomerDomain findByCustomerIdentifier(String id) {
+     return customerDao.getCustomerInfo(id);
   }
 
   public List<CustomerDomain> findAll() {

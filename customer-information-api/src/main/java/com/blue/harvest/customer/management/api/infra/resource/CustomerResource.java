@@ -1,4 +1,4 @@
-package com.blue.harvest.customer.management.api.infra.resource.customer;
+package com.blue.harvest.customer.management.api.infra.resource;
 
 import com.blue.harvest.customer.management.api.infra.dto.CustomerCreationDto;
 import com.blue.harvest.customer.management.api.infra.dto.CustomerDto;
@@ -96,7 +96,7 @@ public class CustomerResource {
     }
   }
 
-  @Operation(summary = "Retrieve a Customer Data by Id",
+  @Operation(summary = "Retrieve a Customer Data by Customer identifier",
       description = "Get a Customer Data object by specifying its id. The response is Customer Data object with id, title, description and published status.")
   @ApiResponses({@ApiResponse(responseCode = "200", content = {
       @Content(schema = @Schema(implementation = CustomerDto.class),
@@ -104,9 +104,10 @@ public class CustomerResource {
       @ApiResponse(responseCode = "404", content = {@Content(schema = @Schema())}),})
   @GetMapping(value = "/get/{id}",
       produces = {APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE})
-  public ResponseEntity<CustomerDto> getAccountDetailsOfCustomer(@PathVariable("id") long id) {
-    CustomerDto customerDto = customerService.findByCustomerIdentifier(id);
-
+  public ResponseEntity<List<CustomerDto>> getAccountDetailsOfCustomer(
+      @PathVariable("id") String id) {
+    List<CustomerDto> customerDto =
+        customerDtoMapper.toDto(List.of(customerService.findByCustomerIdentifier(id)));
     if (customerDto != null) {
       return new ResponseEntity<>(customerDto, HttpStatus.OK);
     } else {

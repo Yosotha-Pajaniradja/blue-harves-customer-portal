@@ -28,4 +28,5 @@ public class CustomerDao {
     return customerEntityMapper.toDomain(
         customerRepository.findAll());
   }
+  
 }

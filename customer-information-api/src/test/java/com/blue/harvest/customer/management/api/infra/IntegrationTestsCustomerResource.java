@@ -60,7 +60,6 @@ class IntegrationTestsCustomerResource {
 
     final TransactionCreationResponse creationResponse = new TransactionCreationResponse();
     final TransactionInfo             transactionInfo  = new TransactionInfo();
-    transactionInfo.setTransactionCreationDate(LocalDate.now());
     transactionInfo.setAccountNumberTarget("targetAccountNumber");
     transactionInfo.setInitialCredit(BigDecimal.ONE);
     creationResponse.addTransactionInfosItem(transactionInfo);

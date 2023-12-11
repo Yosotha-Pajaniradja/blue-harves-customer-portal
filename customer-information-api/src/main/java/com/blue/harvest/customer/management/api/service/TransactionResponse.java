@@ -19,6 +19,4 @@ public class TransactionResponse implements Serializable {
 
   private String customerAccountIdentifier;
 
-  private LocalDate transactionCreationDate;
-
 }

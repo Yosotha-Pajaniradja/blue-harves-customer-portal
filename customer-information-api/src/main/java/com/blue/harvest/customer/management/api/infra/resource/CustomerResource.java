@@ -3,9 +3,12 @@ package com.blue.harvest.customer.management.api.infra.resource;
 import com.blue.harvest.customer.management.api.infra.dto.CustomerCreationDto;
 import com.blue.harvest.customer.management.api.infra.dto.CustomerDto;
 import com.blue.harvest.customer.management.api.infra.dto.CustomerResponseDto;
+import com.blue.harvest.customer.management.api.infra.dto.CustomerTransactionDto;
 import com.blue.harvest.customer.management.api.infra.utils.SecurityProblemResponsesConfiguration;
 import com.blue.harvest.customer.management.api.mapper.CustomerDtoMapper;
 import com.blue.harvest.customer.management.api.service.CustomerService;
+import com.blue.harvest.customer.management.api.service.exception.CustomerAccountCreationException;
+import com.blue.harvest.customer.management.api.service.exception.CustomerAccountDoesNotExist;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -66,13 +69,24 @@ public class CustomerResource {
   public ResponseEntity<CustomerResponseDto> createNewAccountForCustomer(
       @RequestBody CustomerCreationDto customerDetails) {
     try {
+      log.info("The request received from Front is :" + customerDetails.toString());
       CustomerResponseDto customerResponseDto =
           customerService.createCustomerAccount(customerDtoMapper.toDomain(customerDetails));
       return new ResponseEntity<>(CustomerResponseDto.builder()
           .withCustomerTransactionDto(customerResponseDto.getCustomerTransactionDto())
           .withMessage(customerResponseDto.getMessage()).build(), HttpStatus.CREATED);
+    } catch (CustomerAccountDoesNotExist e) {
+      return new ResponseEntity<>(
+          CustomerResponseDto.builder().withMessage("The account does not exist")
+              .withCustomerTransactionDto(CustomerTransactionDto.builder()
+                  .withCustomerIdentifier(customerDetails.getCustomerIdentifier()).build()).build(),
+          HttpStatus.NOT_FOUND);
     } catch (Exception e) {
-      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+       return new ResponseEntity<>(
+          CustomerResponseDto.builder().withMessage("Error while creating the Account")
+              .withCustomerTransactionDto(CustomerTransactionDto.builder()
+                  .withCustomerIdentifier(customerDetails.getCustomerIdentifier()).build()).build(),
+          HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

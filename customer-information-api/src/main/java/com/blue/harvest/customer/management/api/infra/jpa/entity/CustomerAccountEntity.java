@@ -1,6 +1,7 @@
 package com.blue.harvest.customer.management.api.infra.jpa.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -27,14 +28,9 @@ import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 @NoArgsConstructor
 public class CustomerAccountEntity implements Serializable {
 
-  @Column(name = "CUSTOMER_IDENTIFIER")
+  @EmbeddedId
   @Setter(value = AccessLevel.PRIVATE)
-  private String identifierCustomer;
-
-  @Id
-  @Column(name = "account_number", updatable = false, unique = true)
-  @Setter(value = AccessLevel.PRIVATE)
-  private String accountNumber;
+  private CustomerAccountMap accountMap;
 
 
   @Column(name = "validity_date")
@@ -52,8 +48,8 @@ public class CustomerAccountEntity implements Serializable {
       final String accountNumber, final LocalDateTime validityDate,
       final LocalDateTime creationDate) {
     final CustomerAccountEntity customerEntity = new CustomerAccountEntity();
-    customerEntity.setIdentifierCustomer(idCustomer);
-    customerEntity.setAccountNumber(accountNumber);
+    customerEntity.setAccountMap(CustomerAccountMap.builder().withAccountNumber(accountNumber)
+        .withCustomerIdentifier(idCustomer).build());
     customerEntity.setValidityDate(validityDate);
     customerEntity.setCreationDate(creationDate);
 

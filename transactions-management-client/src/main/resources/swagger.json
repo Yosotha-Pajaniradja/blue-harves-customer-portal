@@ -198,8 +198,7 @@
           "accountNumberSource",
           "accountNumberTarget",
           "customerAccountIdentifier",
-          "initialCredit",
-          "transactionCreationDate"
+          "initialCredit"
         ],
         "type": "object",
         "properties": {
@@ -227,12 +226,6 @@
             "minLength": 10,
             "type": "string",
             "description": "Customer account Identifier"
-          },
-          "transactionCreationDate": {
-            "type": "string",
-            "description": "Transaction creation date",
-            "format": "date",
-            "example": "2023-12-22"
           }
         },
         "description": "Represents the transaction referential info"

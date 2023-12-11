@@ -4,10 +4,11 @@ package com.blue.harvest.customer.management.api.service;
 import com.blue.harvest.customer.management.api.domain.AccountInfo;
 import com.blue.harvest.customer.management.api.domain.CustomerDomain;
 import com.blue.harvest.customer.management.api.domain.Transaction;
-import com.blue.harvest.customer.management.api.infra.dto.CustomerDto;
+import com.blue.harvest.customer.management.api.infra.dto.AccountsInfoDto;
 import com.blue.harvest.customer.management.api.infra.dto.CustomerResponseDto;
 import com.blue.harvest.customer.management.api.infra.dto.CustomerTransactionDto;
 import com.blue.harvest.customer.management.api.infra.jpa.repository.CustomerDao;
+import com.blue.harvest.customer.management.api.service.exception.CustomerAccountCreationException;
 import com.blue.harvest.customer.management.api.service.exception.CustomerAccountDoesNotExist;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +38,7 @@ public class CustomerService {
       if (Objects.nonNull(customerInfo)) {
         return controlCustomerInfo(customerInfo, transaction);
       }
-    } catch (Exception e) {
+    } catch (CustomerAccountDoesNotExist e) {
       throw new CustomerAccountDoesNotExist(e.getMessage(), e);
     }
     return null;
@@ -69,23 +70,33 @@ public class CustomerService {
   }
 
   private TransactionResponse triggerNewTransaction(Transaction transaction) {
-    return customerTransactionService.CreateNewTransaction(transaction).get(0);
+    return customerTransactionService.createNewTransaction(transaction).get(0);
 
   }
 
   private Transaction createNewAccount(CustomerDomain customerInfo, Transaction transaction) {
-    final String uniqueID = UUID.randomUUID().toString().replace("-", "");
-    if (transaction.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
-      transaction.setAccountInfo(AccountInfo.builder().withAccountNumberSource("34895793845748935")
-          .withAccountNumberTarget(uniqueID).build());
-      transaction.setCreditAmount(transaction.getCreditAmount());
-      transaction.setAccountIdentifier(customerInfo.getIdCustomer());
+    try {
+      final String uniqueID = UUID.randomUUID().toString().replace("-", "");
+      if (transaction.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
+        AccountInfo accountInfo =
+            AccountInfo.builder().withCustomerIdentifier(customerInfo.getIdCustomer())
+                .withAccountNumberTarget(uniqueID).build();
+        customerDao.createNewAccount(accountInfo);
+        transaction.setAccountInfo(
+            AccountsInfoDto.builder().withAccountNumberTarget(uniqueID).build());
+        transaction.setCreditAmount(transaction.getCreditAmount());
+        transaction.setAccountIdentifier(customerInfo.getIdCustomer());
+        return transaction;
+      }
+    } catch (Exception e) {
+      throw new CustomerAccountCreationException("Error while creating customer account", e);
     }
+
     return transaction;
   }
 
   public CustomerDomain findByCustomerIdentifier(String id) {
-     return customerDao.getCustomerInfo(id);
+    return customerDao.getCustomerInfo(id);
   }
 
   public List<CustomerDomain> findAll() {

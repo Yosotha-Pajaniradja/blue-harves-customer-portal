@@ -40,8 +40,4 @@ public class TransactionInfo implements Serializable {
   @SafeString
   private String customerAccountIdentifier;
 
-  @NotNull(message = "create date Transaction cannot be null")
-  @Schema(description = "Transaction creation date", required = true, example = "2023-12-22")
-  private LocalDate transactionCreationDate;
-
 }

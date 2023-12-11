@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -39,5 +40,7 @@ public class CustomerCreationDto implements Serializable {
   @Schema(description = "Currency of transactions")
   @Size(max = 3)
   private String Currency;
+
+  private BigDecimal creditAmount;
 
 }

@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutionException;
 @ComponentScan("com.blue.generated.harvest.transactions.management.client")
 public class CustomerTransactionService {
   public static final String CUSTOMER_TRANSACTION_SERVICE = "Calling customer transaction service";
+  private static final String SOURCE_ACCOUNT_NUMBER = "f21bd6fc960242ad8dc81350071478a9";
 
   private final TransactionClientService transactionClientService;
 
@@ -34,20 +35,18 @@ public class CustomerTransactionService {
   private static TransactionResponse apply(TransactionInfo transactionInfo) {
     return TransactionResponse.builder()
         .withAccountNumberSource(transactionInfo.getAccountNumberSource())
-        .withTransactionCreationDate(transactionInfo.getTransactionCreationDate())
         .withAmount(transactionInfo.getInitialCredit())
         .withAccountNumberTarget(transactionInfo.getAccountNumberTarget()).build();
   }
 
-  public List<TransactionResponse> CreateNewTransaction(final Transaction transaction) {
+  public List<TransactionResponse> createNewTransaction(final Transaction transaction) {
     try {
       CompletableFuture<TransactionCreationResponse> message =
           transactionClientService.createNewTransaction(TransactionCreation.builder()
-              .withAccountNumberSource(transaction.getAccountInfo().getAccountNumberSource())
+              .withAccountNumberSource(SOURCE_ACCOUNT_NUMBER)
               .withInitialCredit(transaction.getCreditAmount())
               .withCustomerAccountIdentifier(transaction.getAccountIdentifier())
-              .withAccountNumberTarget(transaction.getAccountInfo().getAccountNumberTarget())
-              .build());
+              .withAccountNumberTarget(transaction.getAccountInfo().getAccountNumberTarget()).build());
       TransactionCreationResponse response = message.get();
       if (Objects.nonNull(response.getCountOfSuccess()) && response.getCountOfSuccess() == 1) {
         assert response.getTransactionInfos() != null;
@@ -59,7 +58,7 @@ public class CustomerTransactionService {
         return list;
       }
     } catch (ExecutionException | InterruptedException e) {
-      throw new CustomerAccountCreationException(e.getMessage(), e);
+      throw new CustomerAccountCreationException(CUSTOMER_TRANSACTION_SERVICE + e.getMessage(), e);
     }
     return Collections.emptyList();
   }

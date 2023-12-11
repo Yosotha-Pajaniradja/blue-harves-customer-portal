@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Builder(setterPrefix = "with")
 public class AccountInfo {
   private String accountNumberTarget;
-  private String accountNumberSource;
+  private String customerIdentifier;
   private LocalDate accountCreationDate;
   private LocalDateTime accountValidityDate;
 

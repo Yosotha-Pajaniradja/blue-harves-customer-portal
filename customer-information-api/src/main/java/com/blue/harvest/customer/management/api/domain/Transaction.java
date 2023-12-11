@@ -1,5 +1,6 @@
 package com.blue.harvest.customer.management.api.domain;
 
+import com.blue.harvest.customer.management.api.infra.dto.AccountsInfoDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,6 +12,6 @@ import java.time.LocalDateTime;
 public class Transaction {
   private BigDecimal creditAmount;
   private LocalDateTime transactionDate;
-  private AccountInfo accountInfo;
+  private AccountsInfoDto accountInfo;
   private String accountIdentifier;
 }

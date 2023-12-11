@@ -9,8 +9,6 @@ import com.blue.harvest.transactions.management.api.infra.jpa.entity.Transaction
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-
 
 @Component
 @NoArgsConstructor
@@ -28,8 +26,7 @@ public class TransactionDtoMapper {
         .withAccountNumberSource(transactionDomain.getAccountNumberSource())
         .withAccountNumberTarget(transactionDomain.getAccountNumberTarget())
         .withCustomerAccountIdentifier(transactionDomain.getCustomerAccountIdentifier())
-        .withInitialCredit(transactionDomain.getTransactionAmount())
-        .withTransactionCreationDate(LocalDate.from(transactionDomain.getCreationDate())).build();
+        .withInitialCredit(transactionDomain.getTransactionAmount()).build();
   }
 
   public TransactionDomain toDomain(final TransactionDto transactionDto) {
